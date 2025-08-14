@@ -1,10 +1,12 @@
 import { Router } from "express";
-import * as directorController from "../controllers/directorController";
+import { createDirector, deleteDirector } from "../controllers/directorController";
 
 const router = Router();
-// Create director
-router.post("/", directorController.create);
-// Delete director
-router.delete("/:id", directorController.remove);
+
+// POST /api/directors
+router.post("/", createDirector);
+
+// DELETE /api/directors/:id
+router.delete("/:id", deleteDirector);
 
 export default router;
