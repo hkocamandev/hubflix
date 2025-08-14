@@ -1,23 +1,30 @@
-import { Request, Response, NextFunction } from "express";
-import * as directorService from "../services/directorService";
-import ApiError from "../utils/ApiError";
+import { Request, Response } from "express";
+import Director from "../models/Director";
 
-export const create = async (req: Request, res: Response, next: NextFunction) => {
+// Create a new director
+export const createDirector = async (req: Request, res: Response) => {
   try {
     const { firstName, secondName, birthDate, bio } = req.body;
-    if (!firstName || !secondName || !birthDate) {
-      throw new ApiError(400, "firstName, secondName and birthDate are required");
-    }
-    const director = await directorService.createDirector({ firstName, secondName, birthDate, bio });
+
+    const director = new Director({ firstName, secondName, birthDate, bio });
+    await director.save();
+
     res.status(201).json(director);
-  } catch (err) { next(err); }
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
-export const remove = async (req: Request, res: Response, next: NextFunction) => {
+// Delete a director by ID
+export const deleteDirector = async (req: Request, res: Response) => {
   try {
-    const id = req.params.id;
-    const deleted = await directorService.deleteDirector(id);
-    if (!deleted) throw new ApiError(404, "Director not found");
-    res.json({ ok: true });
-  } catch (err) { next(err); }
+    const { id } = req.params;
+
+    const deleted = await Director.findByIdAndDelete(id);
+    if (!deleted) return res.status(404).json({ error: "Director not found" });
+
+    res.json({ message: "Director deleted successfully" });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
 };

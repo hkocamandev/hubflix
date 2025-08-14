@@ -6,6 +6,6 @@ const PORT = process.env.PORT || 3001;
 (async () => {
   await connectDB();
   app.listen(PORT, () => {
-    console.log(`Hubflix API running on trst  http://localhost:${PORT}`);
+    console.log(`Hubflix API running on http://localhost:${PORT}`);
   });
 })();

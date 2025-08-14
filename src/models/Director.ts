@@ -1,21 +1,17 @@
-import { Schema, model, Types } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
-const DirectorSchema = new Schema(
-  {
-    firstName: { type: String, required: true, trim: true },
-    secondName: { type: String, required: true, trim: true },
-    birthDate: { type: Date, required: true },
-    bio: { type: String, default: "" }
-  },
-  { timestamps: true }
-);
-
-export type Director = {
-  _id: Types.ObjectId;
+export interface IDirector extends Document {
   firstName: string;
   secondName: string;
   birthDate: Date;
   bio?: string;
-};
+}
 
-export default model<Director>("Director", DirectorSchema);
+const DirectorSchema: Schema = new Schema({
+  firstName: { type: String, required: true },
+  secondName: { type: String, required: true },
+  birthDate: { type: Date, required: true },
+  bio: { type: String }
+}, { timestamps: true });
+
+export default mongoose.model<IDirector>("Director", DirectorSchema);
