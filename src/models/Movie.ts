@@ -1,6 +1,16 @@
-import { Schema, model, Types } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
-const MovieSchema = new Schema(
+export interface IMovie extends Document {
+  title: string;
+  description?: string;
+  releaseDate: Date;
+  genre: string;
+  rating: number;
+  imdbId: string;
+  director: mongoose.Types.ObjectId;
+}
+
+const MovieSchema = new Schema<IMovie>(
   {
     title: { type: String, required: true, trim: true, index: true },
     description: { type: String, default: "" },
@@ -15,15 +25,4 @@ const MovieSchema = new Schema(
 
 MovieSchema.index({ title: 1, imdbId: 1 });
 
-export type Movie = {
-  _id: Types.ObjectId;
-  title: string;
-  description?: string;
-  releaseDate: Date;
-  genre: string;
-  rating: number;
-  imdbId: string;
-  director: Types.ObjectId;
-};
-
-export default model<Movie>("Movie", MovieSchema);
+export default mongoose.model<IMovie>("Movie", MovieSchema);
