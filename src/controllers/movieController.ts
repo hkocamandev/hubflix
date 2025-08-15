@@ -1,37 +1,62 @@
-import { Request, Response, NextFunction } from "express";
-import * as movieService from "../services/movieService";
-import ApiError from "../utils/ApiError";
+import { Request, Response } from "express";
+import Movie from "../models/Movie";
 
-export const create = async (req: Request, res: Response, next: NextFunction) => {
+// GET /movies
+export const getMovies = async (req: Request, res: Response) => {
   try {
-    const required = ["title","releaseDate","genre","rating","imdbId","director"];
-    const missing = required.filter(k => !(k in req.body));
-    if (missing.length) throw new ApiError(400, `Missing fields: ${missing.join(", ")}`);
+    const { title, genre } = req.query;
+    const filter: any = {};
 
-    const movie = await movieService.createMovie(req.body);
-    res.status(201).json(movie);
-  } catch (err) { next(err); }
-};
+    if (title) filter.title = { $regex: title as string, $options: "i" };
+    if (genre) filter.genre = { $in: [genre] }; // modelde genre alanı var, genres değil
 
-export const getAll = async (_req: Request, res: Response, next: NextFunction) => {
-  try {
-    const movies = await movieService.getAllMovies();
+    const movies = await Movie.find(filter).populate("director"); // doğru alan adı
     res.json(movies);
-  } catch (err) { next(err); }
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching movies", error: err });
+  }
 };
 
-export const update = async (req: Request, res: Response, next: NextFunction) => {
+// GET /movies/:id
+export const getMovieById = async (req: Request, res: Response) => {
   try {
-    const movie = await movieService.updateMovie(req.params.id, req.body);
-    if (!movie) throw new ApiError(404, "Movie not found");
+    const movie = await Movie.findById(req.params.id).populate("director"); // doğru alan adı
+    if (!movie) return res.status(404).json({ message: "Movie not found" });
     res.json(movie);
-  } catch (err) { next(err); }
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching movie", error: err });
+  }
 };
 
-export const remove = async (req: Request, res: Response, next: NextFunction) => {
+// POST /movies
+export const createMovie = async (req: Request, res: Response) => {
   try {
-    const deleted = await movieService.deleteMovie(req.params.id);
-    if (!deleted) throw new ApiError(404, "Movie not found");
-    res.json({ ok: true });
-  } catch (err) { next(err); }
+    const newMovie = new Movie(req.body);
+    const savedMovie = await newMovie.save();
+    res.status(201).json(savedMovie);
+  } catch (err) {
+    res.status(400).json({ message: "Error creating movie", error: err });
+  }
+};
+
+// PUT /movies/:id
+export const updateMovie = async (req: Request, res: Response) => {
+  try {
+    const updatedMovie = await Movie.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedMovie) return res.status(404).json({ message: "Movie not found" });
+    res.json(updatedMovie);
+  } catch (err) {
+    res.status(400).json({ message: "Error updating movie", error: err });
+  }
+};
+
+// DELETE /movies/:id
+export const deleteMovie = async (req: Request, res: Response) => {
+  try {
+    const deletedMovie = await Movie.findByIdAndDelete(req.params.id);
+    if (!deletedMovie) return res.status(404).json({ message: "Movie not found" });
+    res.json({ message: "Movie deleted" });
+  } catch (err) {
+    res.status(500).json({ message: "Error deleting movie", error: err });
+  }
 };
