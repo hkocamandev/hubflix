@@ -18,6 +18,7 @@ export const getMovies = async (req: Request, res: Response) => {
 };
 
 // GET /movies/:id
+
 export const getMovieById = async (req: Request, res: Response) => {
   try {
     const movie = await Movie.findById(req.params.id).populate("director"); // doğru alan adı
