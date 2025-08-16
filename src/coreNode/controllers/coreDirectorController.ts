@@ -6,6 +6,8 @@ import { validateDirectorBody } from "../utils/coreValidator";
 import coreLogger from "../utils/coreLogger";
 import { handleError } from "../utils/coreErrorHandler";
 import mongoose from "mongoose";
+import { authMiddleware } from "../authMiddleware/authMiddleware";
+
 
 const directorHandlers: Record<string, Function> = {
   [HTTP_METHODS.POST]: async (req: IncomingMessage, res: ServerResponse) => {
@@ -85,7 +87,9 @@ export const handleCoreDirectors = async (
       res.writeHead(405, { "Content-Type": "application/json" });
       return res.end(JSON.stringify({ message: "Method Not Allowed" }));
     }
-    await handler(req, res, id);
+
+    // Burada authMiddleware ile sarıyoruz
+    await authMiddleware(handler)(req, res, id);
   } catch (err) {
     coreLogger.error("Unhandled error in director handler", err);
     handleError(res, err);

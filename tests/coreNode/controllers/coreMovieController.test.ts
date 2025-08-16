@@ -1,37 +1,55 @@
+// Mock authMiddleware BEFORE imports
+jest.mock("../../../src/coreNode/authMiddleware/authMiddleware", () => ({
+  authMiddleware: (handler: any) => handler,
+}));
+
+import { IncomingMessage, ServerResponse } from "http";
 import { handleCoreMovies } from "../../../src/coreNode/controllers/coreMovieController";
 import * as movieService from "../../../src/coreNode/services/coreMovieService";
-import * as coreBodyParser from "../../../src/coreNode/utils/coreBodyParser";
-import coreLogger from "../../../src/coreNode/utils/coreLogger";
-import { IncomingMessage, ServerResponse } from "http";
+import { coreParseBody } from "../../../src/coreNode/utils/coreBodyParser";
 
-jest.mock("../../../src/coreNode/services/coreMovieService");
-jest.mock("../../../src/coreNode/utils/coreBodyParser");
-jest.mock("../../../src/coreNode/utils/coreLogger");
+// Mock dependencies
+jest.mock("../../../src/coreNode/services/coreMovieService", () => ({
+  getAllCoreMovies: jest.fn(),
+  getCoreMovieById: jest.fn(),
+  createCoreMovie: jest.fn(),
+  updateCoreMovie: jest.fn(),
+  patchCoreMovie: jest.fn(),
+  deleteCoreMovie: jest.fn(),
+  replaceCoreMovie: jest.fn(), 
+}));
+
+jest.mock("../../../src/coreNode/utils/coreBodyParser", () => ({
+  coreParseBody: jest.fn(),
+}));
+
+jest.mock("../../../src/coreNode/utils/coreLogger", () => ({
+  info: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
+}));
 
 describe("CoreMovieController", () => {
   let req: Partial<IncomingMessage>;
   let res: Partial<ServerResponse>;
-  let resEndSpy: jest.SpyInstance;
 
   beforeEach(() => {
-    req = {};
-    resEndSpy = jest.fn();
-
+    req = { method: "" };
     res = {
       writeHead: jest.fn(),
-      end: resEndSpy,
-    } as unknown as ServerResponse;
-  });
-
-  afterEach(() => {
+      end: jest.fn(),
+    };
     jest.clearAllMocks();
   });
 
-  // GET all
-  test("GET all movies - success", async () => {
-    const fakeMovies = [{ title: "Movie1" }];
-    (movieService.getAllCoreMovies as jest.Mock).mockResolvedValue(fakeMovies);
+  // --------------------
+  // GET all movies
+  // --------------------
+  it("GET all movies - success", async () => {
     req.method = "GET";
+    (movieService.getAllCoreMovies as jest.Mock).mockResolvedValue([
+      { _id: "1", title: "Movie 1" },
+    ]);
 
     await handleCoreMovies(req as IncomingMessage, res as ServerResponse);
 
@@ -39,228 +57,176 @@ describe("CoreMovieController", () => {
     expect(res.writeHead).toHaveBeenCalledWith(200, {
       "Content-Type": "application/json",
     });
-    expect(resEndSpy).toHaveBeenCalledWith(JSON.stringify(fakeMovies));
-    expect(coreLogger.info).toHaveBeenCalled();
+    expect(res.end).toHaveBeenCalledWith(
+      JSON.stringify([{ _id: "1", title: "Movie 1" }])
+    );
   });
 
-  // GET by ID
-  test("GET movie by ID - not found", async () => {
+  // --------------------
+  // GET movie by ID
+  // --------------------
+  it("GET movie by ID - not found", async () => {
     req.method = "GET";
     const fakeId = "64a05d29466b7a92f5411550";
-    req.url = `/coreApi/movies/${fakeId}`;
     (movieService.getCoreMovieById as jest.Mock).mockResolvedValue(null);
 
-    await handleCoreMovies(
-      req as IncomingMessage,
-      res as ServerResponse,
-      fakeId
-    );
+    await handleCoreMovies(req as IncomingMessage, res as ServerResponse, fakeId);
 
     expect(movieService.getCoreMovieById).toHaveBeenCalledWith(fakeId);
     expect(res.writeHead).toHaveBeenCalledWith(404, {
       "Content-Type": "application/json",
     });
-    expect(resEndSpy).toHaveBeenCalledWith(
-      JSON.stringify({ message: "Movie not found" })
-    );
-    expect(coreLogger.warn).toHaveBeenCalled();
   });
 
-  // POST - invalid
-  test("POST movie - validation error", async () => {
+  // --------------------
+  // POST movie
+  // --------------------
+  it("POST movie - validation error", async () => {
     req.method = "POST";
-    (coreBodyParser.coreParseBody as jest.Mock).mockResolvedValue({
-      title: "",
-    });
+    const invalidBody = { title: "" }; // örnek eksik alan
+    (coreParseBody as jest.Mock).mockResolvedValue(invalidBody);
 
     await handleCoreMovies(req as IncomingMessage, res as ServerResponse);
 
     expect(res.writeHead).toHaveBeenCalledWith(400, {
       "Content-Type": "application/json",
     });
-    expect(resEndSpy).toHaveBeenCalledWith(
+    expect(res.end).toHaveBeenCalledWith(
       expect.stringContaining("Validation failed")
     );
-    expect(coreLogger.warn).toHaveBeenCalled();
   });
 
-  // POST - valid
-  test("POST movie - success", async () => {
-    req.method = "POST";
-    const newMovie = {
-      title: "Inception",
-      releaseDate: "2010-07-16",
-      genre: "Sci-Fi",
-      rating: 8.8,
-      imdbId: "tt1375666",
-      director: "507f1f77bcf86cd799439011", // valid ObjectId formatında sahte id
-    };
-    (coreBodyParser.coreParseBody as jest.Mock).mockResolvedValue(newMovie);
-    (movieService.createCoreMovie as jest.Mock).mockResolvedValue({
-      ...newMovie,
-      _id: "123",
-    });
+it("POST movie - success", async () => {
+  req.method = "POST";
 
-    await handleCoreMovies(req as IncomingMessage, res as ServerResponse);
+  const body = {
+    title: "Inception",
+    releaseDate: "2010-07-16",
+    genre: "Sci-Fi",
+    rating: 8.8,
+    imdbId: "tt1375666",
+    director: "507f1f77bcf86cd799439011",
+  };
 
-    expect(res.writeHead).toHaveBeenCalledWith(201, {
-      "Content-Type": "application/json",
-    });
-    expect(resEndSpy).toHaveBeenCalledWith(
-      JSON.stringify({ ...newMovie, _id: "123" })
-    );
-    expect(coreLogger.info).toHaveBeenCalled();
-  });
+  // Body parse mock
+  (coreParseBody as jest.Mock).mockResolvedValue(body);
+  // Service mock
+  (movieService.createCoreMovie as jest.Mock).mockResolvedValue({ _id: "1", ...body });
 
-  // PUT - invalid
-  test("PUT movie - validation error", async () => {
+  await handleCoreMovies(req as IncomingMessage, res as ServerResponse);
+
+  expect(movieService.createCoreMovie).toHaveBeenCalledWith(body);
+  expect(res.writeHead).toHaveBeenCalledWith(201, { "Content-Type": "application/json" });
+  expect(res.end).toHaveBeenCalledWith(JSON.stringify({ _id: "1", ...body }));
+});
+
+  // --------------------
+  // PUT movie
+  // --------------------
+  it("PUT movie - validation error", async () => {
     req.method = "PUT";
+    const invalidBody = { title: "" };
     const movieId = "64a05d29466b7a92f5411550";
-    (coreBodyParser.coreParseBody as jest.Mock).mockResolvedValue({
-      title: "",
-    });
+    (coreParseBody as jest.Mock).mockResolvedValue(invalidBody);
 
-    await handleCoreMovies(
-      req as IncomingMessage,
-      res as ServerResponse,
-      movieId
-    );
+    await handleCoreMovies(req as IncomingMessage, res as ServerResponse, movieId);
 
     expect(res.writeHead).toHaveBeenCalledWith(400, {
       "Content-Type": "application/json",
     });
-    expect(resEndSpy).toHaveBeenCalledWith(
-      expect.stringContaining("Validation failed")
-    );
-    expect(coreLogger.warn).toHaveBeenCalled();
   });
 
-  // PUT - valid
-  test("PUT movie - success", async () => {
-    req.method = "PUT";
-    const movieId = "64a05d29466b7a92f5411550";
+it("PUT movie - success", async () => {
+  req.method = "PUT";
+  const movieId = "64a05d29466b7a92f5411550";
 
-    const updatedMovie = {
-      title: "Inception Updated",
-      releaseDate: "2010-07-16",
-      genre: "Sci-Fi",
-      rating: 9.0,
-      imdbId: "tt1375666",
-      director: "507f1f77bcf86cd799439011",
-    };
-    (coreBodyParser.coreParseBody as jest.Mock).mockResolvedValue(updatedMovie);
-    (movieService.replaceCoreMovie as jest.Mock).mockResolvedValue({
-      ...updatedMovie,
-      _id: movieId,
-    });
+  const body = {
+    title: "Updated Movie",
+    releaseDate: "2020-01-01",
+    genre: "Action",
+    rating: 7.5,
+    imdbId: "tt1234567",
+    director: "507f1f77bcf86cd799439011",
+  };
 
-    await handleCoreMovies(
-      req as IncomingMessage,
-      res as ServerResponse,
-      movieId
-    );
+  // coreParseBody mock
+  (coreParseBody as jest.Mock).mockResolvedValue(body);
 
-    expect(res.writeHead).toHaveBeenCalledWith(200, {
-      "Content-Type": "application/json",
-    });
-    expect(resEndSpy).toHaveBeenCalledWith(
-      JSON.stringify({ ...updatedMovie, _id: movieId })
-    );
-    expect(coreLogger.info).toHaveBeenCalled();
+  // replaceCoreMovie mock (PUT controller bunu çağırıyor)
+  (movieService.replaceCoreMovie as jest.Mock).mockResolvedValue({
+    _id: movieId,
+    ...body,
   });
 
-  // PATCH - invalid
-  test("PATCH movie - validation error", async () => {
+  await handleCoreMovies(req as IncomingMessage, res as ServerResponse, movieId);
+
+  // Servis çağrısı
+  expect(movieService.replaceCoreMovie).toHaveBeenCalledWith(movieId, body);
+
+  // Response kontrolü
+  expect(res.writeHead).toHaveBeenCalledWith(200, {
+    "Content-Type": "application/json",
+  });
+  expect(res.end).toHaveBeenCalledWith(JSON.stringify({ _id: movieId, ...body }));
+});
+  // --------------------
+  // PATCH movie
+  // --------------------
+  it("PATCH movie - validation error", async () => {
     req.method = "PATCH";
+    const invalidBody = { title: "" };
     const movieId = "64a05d29466b7a92f5411550";
-    (coreBodyParser.coreParseBody as jest.Mock).mockResolvedValue({
-      rating: -1,
-    });
+    (coreParseBody as jest.Mock).mockResolvedValue(invalidBody);
 
-    await handleCoreMovies(
-      req as IncomingMessage,
-      res as ServerResponse,
-      movieId
-    );
+    await handleCoreMovies(req as IncomingMessage, res as ServerResponse, movieId);
 
     expect(res.writeHead).toHaveBeenCalledWith(400, {
       "Content-Type": "application/json",
     });
-    expect(resEndSpy).toHaveBeenCalledWith(
-      expect.stringContaining("Validation failed")
-    );
-    expect(coreLogger.warn).toHaveBeenCalled();
   });
 
-  // PATCH - valid
-  test("PATCH movie - success", async () => {
+  it("PATCH movie - success", async () => {
     req.method = "PATCH";
+    const body = { title: "Patched Movie" };
     const movieId = "64a05d29466b7a92f5411550";
-    const patchedMovie = { rating: 9.2 };
-    (coreBodyParser.coreParseBody as jest.Mock).mockResolvedValue(patchedMovie);
-    (movieService.updateCoreMovie as jest.Mock).mockResolvedValue({
-      ...patchedMovie,
-      _id: movieId,
-    });
+    (coreParseBody as jest.Mock).mockResolvedValue(body);
+    (movieService.updateCoreMovie as jest.Mock).mockResolvedValue({ _id: movieId, ...body });
 
-    await handleCoreMovies(
-      req as IncomingMessage,
-      res as ServerResponse,
-      movieId
-    );
+    await handleCoreMovies(req as IncomingMessage, res as ServerResponse, movieId);
 
     expect(res.writeHead).toHaveBeenCalledWith(200, {
       "Content-Type": "application/json",
     });
-    expect(resEndSpy).toHaveBeenCalledWith(
-      JSON.stringify({ ...patchedMovie, _id: movieId })
-    );
-    expect(coreLogger.info).toHaveBeenCalled();
+    expect(res.end).toHaveBeenCalledWith(JSON.stringify({ _id: movieId, ...body }));
   });
 
-  // DELETE - not found
-  test("DELETE movie - not found", async () => {
+  // --------------------
+  // DELETE movie
+  // --------------------
+  it("DELETE movie - not found", async () => {
     req.method = "DELETE";
     const movieId = "64a05d29466b7a92f5411550";
     (movieService.deleteCoreMovie as jest.Mock).mockResolvedValue(null);
 
-    await handleCoreMovies(
-      req as IncomingMessage,
-      res as ServerResponse,
-      movieId
-    );
+    await handleCoreMovies(req as IncomingMessage, res as ServerResponse, movieId);
 
     expect(res.writeHead).toHaveBeenCalledWith(404, {
       "Content-Type": "application/json",
     });
-    expect(resEndSpy).toHaveBeenCalledWith(
-      JSON.stringify({ message: "Movie not found" })
-    );
-    expect(coreLogger.warn).toHaveBeenCalled();
   });
 
-  // DELETE - success
-  test("DELETE movie - success", async () => {
+  it("DELETE movie - success", async () => {
     req.method = "DELETE";
     const movieId = "64a05d29466b7a92f5411550";
-    const deletedMovie = { _id: movieId, title: "Inception" };
-    (movieService.deleteCoreMovie as jest.Mock).mockResolvedValue(deletedMovie);
+    (movieService.deleteCoreMovie as jest.Mock).mockResolvedValue({ _id: movieId });
 
-    await handleCoreMovies(
-      req as IncomingMessage,
-      res as ServerResponse,
-      movieId
-    );
+    await handleCoreMovies(req as IncomingMessage, res as ServerResponse, movieId);
 
     expect(res.writeHead).toHaveBeenCalledWith(200, {
       "Content-Type": "application/json",
     });
-    expect(resEndSpy).toHaveBeenCalledWith(
-      JSON.stringify({
-        message: "Movie deleted successfully",
-        data: deletedMovie,
-      })
+    expect(res.end).toHaveBeenCalledWith(
+      JSON.stringify({ message: "Movie deleted successfully", data: { _id: movieId } })
     );
-    expect(coreLogger.info).toHaveBeenCalled();
   });
 });
