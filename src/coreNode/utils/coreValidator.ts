@@ -30,10 +30,15 @@ export const validateMoviePatchBody = (body: any): string[] => {
   const errors: string[] = [];
 
   if (body.title !== undefined && !body.title) errors.push("Title is required");
-  if (body.releaseDate !== undefined && !body.releaseDate) errors.push("Release date is required");
+  if (body.releaseDate !== undefined && !body.releaseDate)
+    errors.push("Release date is required");
   if (body.genre !== undefined && !body.genre) errors.push("Genre is required");
-  if (body.rating !== undefined && typeof body.rating !== "number") errors.push("Rating must be a number");
-  if (body.imdbId !== undefined && !body.imdbId) errors.push("IMDb ID is required");
+  if (body.rating !== undefined && typeof body.rating !== "number")
+    errors.push("Rating must be a number");
+  if (body.rating < 0 || body.rating > 10)
+    errors.push("Rating must be between 0 and 10");
+  if (body.imdbId !== undefined && !body.imdbId)
+    errors.push("IMDb ID is required");
   if (body.director !== undefined) {
     if (!body.director) {
       errors.push("Director is required");
