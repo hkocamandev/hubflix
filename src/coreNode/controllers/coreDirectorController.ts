@@ -17,7 +17,9 @@ const directorHandlers: Record<string, Function> = {
       if (errors.length) {
         coreLogger.warn("Director creation failed: Validation errors", errors);
         res.writeHead(400, { "Content-Type": "application/json" });
-        return res.end(JSON.stringify({ message: "Validation failed", errors }));
+        return res.end(
+          JSON.stringify({ message: "Validation failed", errors })
+        );
       }
 
       const director = await directorService.createCoreDirector(body);
@@ -30,41 +32,52 @@ const directorHandlers: Record<string, Function> = {
     }
   },
 
-  
+  [HTTP_METHODS.DELETE]: async (
+    req: IncomingMessage,
+    res: ServerResponse,
+    id?: string
+  ) => {
+    try {
+      if (!id) {
+        coreLogger.warn("Delete director failed: Director ID required");
+        res.writeHead(400, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify({ message: "Director ID required" }));
+      }
 
-[HTTP_METHODS.DELETE]: async (req: IncomingMessage, res: ServerResponse, id?: string) => {
-  try {
-    if (!id) {
-      coreLogger.warn("Delete director failed: Director ID required");
-      res.writeHead(400, { "Content-Type": "application/json" });
-      return res.end(JSON.stringify({ message: "Director ID required" }));
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        coreLogger.warn(`Delete director failed: Invalid ObjectId - ${id}`);
+        res.writeHead(400, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify({ message: "Invalid director ID" }));
+      }
+
+      const deleted = await directorService.deleteCoreDirector(id);
+
+      if (!deleted) {
+        coreLogger.warn(`Director not found for deletion. ID: ${id}`);
+        res.writeHead(404, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify({ message: "Director not found" }));
+      }
+
+      coreLogger.info(`Director deleted successfully. ID: ${id}`);
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(
+        JSON.stringify({
+          message: "Director deleted successfully",
+          data: deleted,
+        })
+      );
+    } catch (err) {
+      coreLogger.error(`Error deleting director. ID: ${id}`, err);
+      handleError(res, err);
     }
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      coreLogger.warn(`Delete director failed: Invalid ObjectId - ${id}`);
-      res.writeHead(400, { "Content-Type": "application/json" });
-      return res.end(JSON.stringify({ message: "Invalid director ID" }));
-    }
-
-    const deleted = await directorService.deleteCoreDirector(id);
-
-    if (!deleted) {
-      coreLogger.warn(`Director not found for deletion. ID: ${id}`);
-      res.writeHead(404, { "Content-Type": "application/json" });
-      return res.end(JSON.stringify({ message: "Director not found" }));
-    }
-
-    coreLogger.info(`Director deleted successfully. ID: ${id}`);
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ message: "Director deleted successfully", data: deleted }));
-  } catch (err) {
-    coreLogger.error(`Error deleting director. ID: ${id}`, err);
-    handleError(res, err);
-  }
-}
+  },
 };
 
-export const handleCoreDirectors = async (req: IncomingMessage, res: ServerResponse, id?: string) => {
+export const handleCoreDirectors = async (
+  req: IncomingMessage,
+  res: ServerResponse,
+  id?: string
+) => {
   try {
     const handler = directorHandlers[req.method!];
     if (!handler) {

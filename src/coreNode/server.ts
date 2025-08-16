@@ -6,5 +6,7 @@ const PORT = 4000;
 
 connectCoreDB().then(() => {
   const server = http.createServer(coreRouter);
-  server.listen(PORT, () => console.log(`Core Node Server running on port ${PORT}`));
+  server.listen(PORT, () =>
+    console.log(`Core Node Server running on port ${PORT}`)
+  );
 });
