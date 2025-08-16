@@ -8,6 +8,8 @@ import {
 } from "../utils/coreValidator";
 import coreLogger from "../utils/coreLogger";
 import { handleError } from "../utils/coreErrorHandler";
+import { authMiddleware } from "../authMiddleware/authMiddleware";
+
 
 const movieHandlers: Record<string, Function> = {
   [HTTP_METHODS.GET]: async (
@@ -187,10 +189,13 @@ export const handleCoreMovies = async (
   id?: string
 ) => {
   const handler = movieHandlers[req.method!];
+
   if (!handler) {
     coreLogger.warn(`Method Not Allowed: ${req.method}`);
     res.writeHead(405, { "Content-Type": "application/json" });
     return res.end(JSON.stringify({ message: "Method Not Allowed" }));
   }
-  await handler(req, res, id);
+
+  // handler’ı authMiddleware ile sarıyoruz
+  await authMiddleware(handler)(req, res, id);
 };

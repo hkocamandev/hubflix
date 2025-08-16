@@ -1,18 +1,33 @@
+jest.mock("../../../src/coreNode/authMiddleware/authMiddleware", () => ({
+  authMiddleware: (handler: any) => handler,
+}));
+
 import { IncomingMessage, ServerResponse } from "http";
 import { handleCoreDirectors } from "../../../src/coreNode/controllers/coreDirectorController";
 import * as directorService from "../../../src/coreNode/services/coreDirectorService";
 import { coreParseBody } from "../../../src/coreNode/utils/coreBodyParser";
 
 // Mock dependencies
-jest.mock("../../../src/coreNode/services/coreDirectorService");
-jest.mock("../../../src/coreNode/utils/coreBodyParser");
+jest.mock("../../../src/coreNode/services/coreDirectorService", () => ({
+  getAllCoreDirectors: jest.fn(),
+  getCoreDirectorById: jest.fn(),
+  createCoreDirector: jest.fn(),
+  updateCoreDirector: jest.fn(),
+  patchCoreDirector: jest.fn(),
+  deleteCoreDirector: jest.fn(),
+}));
+
+jest.mock("../../../src/coreNode/utils/coreBodyParser", () => ({
+  coreParseBody: jest.fn(),
+}));
+
 jest.mock("../../../src/coreNode/utils/coreLogger", () => ({
   info: jest.fn(),
   warn: jest.fn(),
   error: jest.fn(),
 }));
 
-describe("coreDirectorController", () => {
+describe("CoreDirectorController", () => {
   let req: Partial<IncomingMessage>;
   let res: Partial<ServerResponse>;
 
@@ -44,6 +59,7 @@ describe("coreDirectorController", () => {
 
     await handleCoreDirectors(req as IncomingMessage, res as ServerResponse);
 
+    expect(directorService.createCoreDirector).toHaveBeenCalledWith(body);
     expect(res.writeHead).toHaveBeenCalledWith(201, {
       "Content-Type": "application/json",
     });
