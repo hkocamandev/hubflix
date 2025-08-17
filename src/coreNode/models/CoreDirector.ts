@@ -19,7 +19,7 @@ const CoreDirectorSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-// Bu indeks sayesinde nconst üzerinden de lookup yapılabilir
+// nconst: lookup can be done with this index
 CoreDirectorSchema.index({ nconst: 1 });
 
 export default mongoose.model<ICoreDirector>(

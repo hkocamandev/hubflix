@@ -1,0 +1,444 @@
+{
+	"info": {
+		"_postman_id": "317e0f78-4789-4f86-9ca5-93500c531ff6",
+		"name": "Hubflix Api Collection",
+		"description": "This collection contains the Express (3001) and Core (4000) backend endpoints.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14967905"
+	},
+	"item": [
+		{
+			"name": "express",
+			"item": [
+				{
+					"name": "getAllMoviesExpress",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "postNewMovieExpress",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Inception4\",\n  \"description\": \"Dream heist\",\n  \"releaseDate\": \"2010-07-16\",\n  \"genre\": \"Sci-Fi\",\n  \"rating\": 9,\n  \"imdbId\": \"tt1344751\",\n  \"director\": \"64f3a2f6d5e4d12c3a5d67a1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/movies",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateMovieExpress",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Inception5\",\n  \"description\": \"Dream heist\",\n  \"releaseDate\": \"2010-07-16\",\n  \"genre\": \"Sci-Fi\",\n  \"rating\": 10,\n  \"imdbId\": \"tt1344621\",\n  \"director\": \"64f3a2f6d5e4d12c3a5d67a1\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/movies/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"movies",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "68a100d59f97d9c2f83eb203"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteMovieExpress",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/movies/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"movies",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "68a100d59f97d9c2f83eb203"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "postnewDirectorExpress",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Christopher\",\n  \"secondName\": \"Nolan\",\n  \"birthDate\": \"1970-07-30\",\n  \"bio\": \"British-American filmmaker\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/directors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"directors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteDirectorExpress",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Inception\",\n  \"description\": \"Dream heist\",\n  \"releaseDate\": \"2010-07-16\",\n  \"genre\": \"Sci-Fi\",\n  \"rating\": 9,\n  \"imdbId\": \"tt1375666\",\n  \"director\": \"64f3a2f6d5e4d12c3a5d67a1\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/directors/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"directors",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "68a1e5b246062fa7e837030d"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "core",
+			"item": [
+				{
+					"name": "getAllMoviesCore",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "getMoviesByIdCore",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/coreApi/movies/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"coreApi",
+								"movies",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "68a1ac3a37baad4faed94646"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "postMovieCore",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Inception\",\n  \"description\": \"Dream heist\",\n  \"releaseDate\": \"2010-07-16\",\n  \"genre\": \"Sci-Fi\",\n  \"rating\": 9,\n  \"imdbId\": \"tt1344544\",\n  \"director\": \"64f3a2f6d5e4d12c3a5d67a1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/coreApi/movies",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"coreApi",
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patchMovieCore",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"rating\": 8 }\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/coreApi/movies/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"coreApi",
+								"movies",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "68a0f9d6969acf2e7601bb60"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteMovieCore",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/coreApi/movies/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"coreApi",
+								"movies",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "68a0b92b2779a8834dbfc1c0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateMovieCore",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Inception3\",\n  \"description\": \"Dream heist\",\n  \"releaseDate\": \"2010-07-16\",\n  \"genre\": \"Sci-Fi\",\n  \"rating\": 9,\n  \"imdbId\": \"tt1344641\",\n  \"director\": \"64f3a2f6d5e4d12c3a5d67a1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/coreApi/movies/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"coreApi",
+								"movies",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "68a0f9d6969acf2e7601bb60"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "postDirectorCore",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Christopher\",\n  \"secondName\": \"Nolan\",\n  \"birthDate\": \"1970-07-30\",\n  \"bio\": \"British-American filmmaker\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/coreApi/directors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"coreApi",
+								"directors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteDirectorCore",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/directors/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"directors",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "68a0fc15969acf2e7601bb67"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{jwt-token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "jwt-token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NTM2Mjg4MCwiZXhwIjoxNzU2MjUyNzk5fQ.V6y3VBErgQNU2ewp7YbdPhVe2jc-5XroWZRJjE2z-tM"
+		}
+	]
+}
