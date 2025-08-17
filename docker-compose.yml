@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  express-service:
+    build: .
+    command: npx ts-node src/server.ts
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URI: "mongodb://mongo:27017/hubflix"
+
+  core-service:
+    build: .
+    command: npx ts-node src/coreNode/server.ts
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URI: "mongodb://mongo:27017/hubflix"
+
+  mongo:
+    image: mongo:4.4
+    ports:
+      - "27017:27017"
+      
+  tests:
+    build: .
+    depends_on:
+      - mongo
+    command: npm run test:coreNode

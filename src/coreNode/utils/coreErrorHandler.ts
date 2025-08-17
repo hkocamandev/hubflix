@@ -6,16 +6,25 @@ export interface IError {
   errors?: any;
 }
 
-export const handleError = (res: ServerResponse, err: unknown, statusCode: number = 500) => {
+export const handleError = (
+  res: ServerResponse,
+  err: unknown,
+  statusCode: number = 500
+) => {
   let errorResponse: IError = { message: "Unknown error" };
 
   if (err && typeof err === "object" && "message" in err) {
-    errorResponse = { 
-      message: (err as any).message, 
-      errors: (err as any).errors 
+    errorResponse = {
+      message: (err as any).message,
+      errors: (err as any).errors,
     };
   }
 
   res.writeHead(statusCode, { "Content-Type": "application/json" });
-  res.end(JSON.stringify({ message: errorResponse.message, errors: errorResponse.errors }));
+  res.end(
+    JSON.stringify({
+      message: errorResponse.message,
+      errors: errorResponse.errors,
+    })
+  );
 };
