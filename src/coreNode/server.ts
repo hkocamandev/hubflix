@@ -1,5 +1,5 @@
 import http from "http";
-import { connectCoreDB } from "./db/mongo";
+import  connectCoreDB  from "./db/mongo";
 import { coreRouter } from "./routes/coreRouter";
 
 const PORT = 4000;

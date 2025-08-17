@@ -1,14 +1,16 @@
-import mongoose from "mongoose";
-import dotenv from "dotenv";
+import mongoose from 'mongoose';
 
-dotenv.config();
+const dbUri = process.env.MONGO_URI || 'mongodb://localhost:27017/my_database';
 
-export const connectCoreDB = async () => {
+const connectCoreDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI!, { dbName: "hubflix" });
-    console.log("Core Node MongoDB connected");
-  } catch (err) {
-    console.error("DB connection error:", err);
+    await mongoose.connect(dbUri);
+    console.log('MongoDB connection successful');
+  } catch (error) {
+    console.error('DB connection error:', error);
+    // Hata durumunda uygulamayı sonlandırın
     process.exit(1);
   }
 };
+
+export default connectCoreDB;

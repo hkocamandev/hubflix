@@ -1,3 +1,4 @@
+import 'dotenv/config'; 
 import { IncomingMessage, ServerResponse } from "http";
 import jwt from "jsonwebtoken";
 import coreLogger from "../utils/coreLogger";
