@@ -26,7 +26,7 @@ const CoreMovieSchema: Schema = new Schema<ICoreMovie>(
       required: true,
     },
     directorNconst: { type: String, default: null }, // OMDb director ID
-    tconst: { type: String, default: null }, // OMDb movie ID, artık unique değil
+    tconst: { type: String, default: null }, // OMDb movie ID
   },
   { timestamps: true }
 );
