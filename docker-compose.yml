@@ -18,14 +18,22 @@ services:
       - "4000:4000"
     depends_on:
       - mongo
+      - redis
     environment:
       MONGO_URI: "mongodb://mongo:27017/hubflix"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
 
   mongo:
     image: mongo:4.4
     ports:
       - "27017:27017"
-      
+  
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
   tests:
     build: .
     depends_on:
