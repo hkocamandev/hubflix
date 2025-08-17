@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3001:3001"
+      - "4000:4000"
+    depends_on:
+      - mongo
+    environment:
+      # Uygulamanızın bu ortam değişkenini kullanarak MongoDB'ye bağlanmasını sağlayın
+      MONGO_URI: "mongodb://mongo:27017/hubflix"
+
+  mongo:
+    image: mongo:4.4
+    ports:
+      - "27017:27017"
