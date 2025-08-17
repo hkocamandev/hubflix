@@ -1,0 +1,154 @@
+[
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67a1",
+    "firstName": "Frank",
+    "secondName": "Darabont",
+    "birthDate": "1959-01-28T00:00:00.000Z",
+    "bio": "Frank Darabont is a Hungarian-American film director, screenwriter, and producer. He has directed and written several critically acclaimed films, including 'The Shawshank Redemption'.",
+    "nconst": "nm0001104"
+  },
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67a2",
+    "firstName": "Francis Ford",
+    "secondName": "Coppola",
+    "birthDate": "1939-04-07T00:00:00.000Z",
+    "bio": "Francis Ford Coppola is an American film director, producer, and screenwriter. He is a central figure in the New Hollywood film movement of the 1960s and 1970s.",
+    "nconst": "nm0000338"
+  },
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67a3",
+    "firstName": "Christopher",
+    "secondName": "Nolan",
+    "birthDate": "1970-07-30T00:00:00.000Z",
+    "bio": "Christopher Nolan is a British-American film director, screenwriter, and producer. His films have grossed over US$5 billion worldwide and have earned 11 Academy Awards from 36 nominations.",
+    "nconst": "nm0634240"
+  },
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67a4",
+    "firstName": "Sidney",
+    "secondName": "Lumet",
+    "birthDate": "1924-06-25T00:00:00.000Z",
+    "bio": "Sidney Lumet was an American film director, producer, and screenwriter with over 50 films to his credit.",
+    "nconst": "nm0001486"
+  },
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67a5",
+    "firstName": "Steven",
+    "secondName": "Spielberg",
+    "birthDate": "1946-12-18T00:00:00.000Z",
+    "bio": "Steven Spielberg is an American film director, producer, and screenwriter. He is one of the most commercially successful directors in history.",
+    "nconst": "nm0000676"
+  },
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67a6",
+    "firstName": "Peter",
+    "secondName": "Jackson",
+    "birthDate": "1961-10-31T00:00:00.000Z",
+    "bio": "Sir Peter Jackson is a New Zealand film director, screenwriter, and producer. He is best known for his adaptations of J.R.R. Tolkien's 'The Lord of the Rings' trilogy.",
+    "nconst": "nm0001392"
+  },
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67a7",
+    "firstName": "Quentin",
+    "secondName": "Tarantino",
+    "birthDate": "1963-03-27T00:00:00.000Z",
+    "bio": "Quentin Tarantino is an American film director, screenwriter, producer, and actor. His films are characterized by non-linear storylines, stylized violence, and ensemble casts.",
+    "nconst": "nm0000233"
+  },
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67a8",
+    "firstName": "Robert",
+    "secondName": "Zemeckis",
+    "birthDate": "1952-05-14T00:00:00.000Z",
+    "bio": "Robert Zemeckis is an American film director, producer, and screenwriter. He is known for directing films such as 'Forrest Gump' and 'Cast Away'.",
+    "nconst": "nm0000709"
+  },
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67a9",
+    "firstName": "Sergio",
+    "secondName": "Leone",
+    "birthDate": "1929-01-03T00:00:00.000Z",
+    "bio": "Sergio Leone was an Italian film director, producer, and screenwriter, most famous for his pioneering work in the Spaghetti Western genre.",
+    "nconst": "nm0001466"
+  },
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67aa",
+    "firstName": "David",
+    "secondName": "Fincher",
+    "birthDate": "1962-08-28T00:00:00.000Z",
+    "bio": "David Fincher is an American film director and producer. His films often explore dark, psychological themes and have a distinct visual style.",
+    "nconst": "nm0000399"
+  },
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67ab",
+    "firstName": "Martin",
+    "secondName": "Scorsese",
+    "birthDate": "1942-11-17T00:00:00.000Z",
+    "bio": "Martin Scorsese is an American film director, producer, screenwriter, and actor. He is widely regarded as one of the most significant and influential filmmakers in cinematic history.",
+    "nconst": "nm0000217"
+  },
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67ac",
+    "firstName": "Alfred",
+    "secondName": "Hitchcock",
+    "birthDate": "1899-08-13T00:00:00.000Z",
+    "bio": "Sir Alfred Hitchcock was an English film director and producer. He is widely regarded as one of the most influential figures in cinema history.",
+    "nconst": "nm0000033"
+  },
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67ad",
+    "firstName": "Hayao",
+    "secondName": "Miyazaki",
+    "birthDate": "1941-01-05T00:00:00.000Z",
+    "bio": "Hayao Miyazaki is a Japanese film director, producer, screenwriter, animator, author, and manga artist. A co-founder of Studio Ghibli, he has attained international acclaim as a masterful storyteller and a creator of animated feature films.",
+    "nconst": "nm0594503"
+  },
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67ae",
+    "firstName": "Denis",
+    "secondName": "Villeneuve",
+    "birthDate": "1967-10-03T00:00:00.000Z",
+    "bio": "Denis Villeneuve is a Canadian film director, producer, and screenwriter. He is a four-time winner of the Canadian Screen Award for Best Director.",
+    "nconst": "nm0898288"
+  },
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67af",
+    "firstName": "Stanley",
+    "secondName": "Kubrick",
+    "birthDate": "1928-07-26T00:00:00.000Z",
+    "bio": "Stanley Kubrick was an American film director, screenwriter, producer, and photographer. He is frequently cited as one of the greatest and most influential directors in cinematic history.",
+    "nconst": "nm0000041"
+  },
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67b0",
+    "firstName": "Billy",
+    "secondName": "Wilder",
+    "birthDate": "1906-06-22T00:00:00.000Z",
+    "bio": "Billy Wilder was an Austrian-American film director, screenwriter, and producer. His career spanned more than five decades and he is regarded as one of the most versatile and influential filmmakers of Hollywood's Golden Age.",
+    "nconst": "nm0000697"
+  },
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67b1",
+    "firstName": "James",
+    "secondName": "Cameron",
+    "birthDate": "1954-08-16T00:00:00.000Z",
+    "bio": "James Cameron is a Canadian film director, producer, screenwriter, inventor, and deep-sea explorer. He has directed some of the highest-grossing films of all time.",
+    "nconst": "nm0000116"
+  },
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67b2",
+    "firstName": "Orson",
+    "secondName": "Welles",
+    "birthDate": "1915-05-06T00:00:00.000Z",
+    "bio": "Orson Welles was an American film director, actor, screenwriter, and producer who is remembered for his innovative work in film, theatre, and radio.",
+    "nconst": "nm0000080"
+  },
+  {
+    "_id": "64f3a2f6d5e4d12c3a5d67b3",
+    "firstName": "Buster",
+    "secondName": "Keaton",
+    "birthDate": "1895-10-04T00:00:00.000Z",
+    "bio": "Buster Keaton was an American actor, comedian, film director, producer, screenwriter, and stunt performer. He is best known for his silent films, in which his trademark was physical comedy with a consistently stoic, deadpan expression.",
+    "nconst": "nm0000475"
+  }
+]

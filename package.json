@@ -7,6 +7,9 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
+    "start:express": "npx ts-node src/server.ts",
+    "start:core": "npx ts-node src/coreNode/server.ts",
+    "start:importer": "npx ts-node src/coreNode/data/insertScript.ts",
     "test": "jest --runInBand",
     "test:watch": "jest --watch",
     "test:coreNode": "jest tests/coreNode --runInBand"
@@ -25,6 +28,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongo-sanitize": "^1.1.0",
     "mongoose": "^8.17.1",
+    "xss": "^1.0.15",
     "xss-clean": "^0.1.4"
   },
   "devDependencies": {

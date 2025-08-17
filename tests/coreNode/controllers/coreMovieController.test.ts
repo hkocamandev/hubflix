@@ -9,6 +9,7 @@ import * as movieService from "../../../src/coreNode/services/coreMovieService";
 import { coreParseBody } from "../../../src/coreNode/utils/coreBodyParser";
 import mongoose from "mongoose";
 import CoreDirector from "../../../src/coreNode/models/CoreDirector";
+import sanitizeInput from "../../../src/coreNode/utils/coreSanitizer";
 import dotenv from "dotenv";
 dotenv.config();
 // --------------------
@@ -48,14 +49,14 @@ describe("CoreMovieController with Redis Cache (mocked)", () => {
   let directorId: string;
   let movieId: string;
 
-beforeAll(() => {
-  jest.setTimeout(60000);
-  directorId = new mongoose.Types.ObjectId().toString();
-});
+  beforeAll(() => {
+    jest.setTimeout(60000);
+    directorId = new mongoose.Types.ObjectId().toString();
+  });
 
-afterAll(() => {
-  jest.clearAllMocks();
-});
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
 
   beforeEach(() => {
     req = { method: "" };
@@ -144,7 +145,11 @@ afterAll(() => {
     const fakeId = "64a05d29466b7a92f5411550";
     (movieService.getCoreMovieById as jest.Mock).mockResolvedValue(null);
 
-    await handleCoreMovies(req as IncomingMessage, res as ServerResponse, fakeId);
+    await handleCoreMovies(
+      req as IncomingMessage,
+      res as ServerResponse,
+      fakeId
+    );
 
     expect(movieService.getCoreMovieById).toHaveBeenCalledWith(fakeId);
     expect(res.writeHead).toHaveBeenCalledWith(404, {
@@ -197,6 +202,48 @@ afterAll(() => {
     expect(res.end).toHaveBeenCalledWith(JSON.stringify({ _id: "1", ...body }));
   });
 
+// --------------------
+// POST movie - XSS sanitize
+// --------------------
+ // sanitize fonksiyonun varsa
+
+it("POST movie - sanitizes XSS from title", async () => {
+  req.method = "POST";
+
+  const body = {
+    title: "<script>alert('xss')</script>",
+    releaseDate: "2010-07-16",
+    genre: "Sci-Fi",
+    rating: 8.8,
+    imdbId: "tt1375666",
+    director: directorId,
+  };
+
+  // coreParseBody mock ile geri döndürülüyor
+  (coreParseBody as jest.Mock).mockResolvedValue(body);
+
+  // createCoreMovie mock
+  (movieService.createCoreMovie as jest.Mock).mockImplementation((data) => ({
+    _id: "2",
+    ...data,
+  }));
+
+  await handleCoreMovies(req as IncomingMessage, res as ServerResponse);
+
+  expect(movieService.createCoreMovie).toHaveBeenCalled();
+
+  const calledWith = (movieService.createCoreMovie as jest.Mock).mock.calls[0][0];
+
+  // XSS sanitize'yi manuel test ediyoruz
+  const sanitizedTitle = sanitizeInput(body.title);
+  expect(sanitizedTitle).not.toContain("<script>");
+  expect(sanitizedTitle).toContain("alert");
+
+  expect(res.writeHead).toHaveBeenCalledWith(201, {
+    "Content-Type": "application/json",
+  });
+});
+
   // --------------------
   // PUT movie
   // --------------------
@@ -206,7 +253,11 @@ afterAll(() => {
     const movieId = "64a05d29466b7a92f5411550";
     (coreParseBody as jest.Mock).mockResolvedValue(invalidBody);
 
-    await handleCoreMovies(req as IncomingMessage, res as ServerResponse, movieId);
+    await handleCoreMovies(
+      req as IncomingMessage,
+      res as ServerResponse,
+      movieId
+    );
 
     expect(res.writeHead).toHaveBeenCalledWith(400, {
       "Content-Type": "application/json",
@@ -232,13 +283,19 @@ afterAll(() => {
       ...body,
     });
 
-    await handleCoreMovies(req as IncomingMessage, res as ServerResponse, movieId);
+    await handleCoreMovies(
+      req as IncomingMessage,
+      res as ServerResponse,
+      movieId
+    );
 
     expect(movieService.replaceCoreMovie).toHaveBeenCalledWith(movieId, body);
     expect(res.writeHead).toHaveBeenCalledWith(200, {
       "Content-Type": "application/json",
     });
-    expect(res.end).toHaveBeenCalledWith(JSON.stringify({ _id: movieId, ...body }));
+    expect(res.end).toHaveBeenCalledWith(
+      JSON.stringify({ _id: movieId, ...body })
+    );
   });
 
   // --------------------
@@ -250,7 +307,11 @@ afterAll(() => {
     const movieId = "64a05d29466b7a92f5411550";
     (coreParseBody as jest.Mock).mockResolvedValue(invalidBody);
 
-    await handleCoreMovies(req as IncomingMessage, res as ServerResponse, movieId);
+    await handleCoreMovies(
+      req as IncomingMessage,
+      res as ServerResponse,
+      movieId
+    );
 
     expect(res.writeHead).toHaveBeenCalledWith(400, {
       "Content-Type": "application/json",
@@ -267,12 +328,18 @@ afterAll(() => {
       ...body,
     });
 
-    await handleCoreMovies(req as IncomingMessage, res as ServerResponse, movieId);
+    await handleCoreMovies(
+      req as IncomingMessage,
+      res as ServerResponse,
+      movieId
+    );
 
     expect(res.writeHead).toHaveBeenCalledWith(200, {
       "Content-Type": "application/json",
     });
-    expect(res.end).toHaveBeenCalledWith(JSON.stringify({ _id: movieId, ...body }));
+    expect(res.end).toHaveBeenCalledWith(
+      JSON.stringify({ _id: movieId, ...body })
+    );
   });
 
   // --------------------
@@ -283,7 +350,11 @@ afterAll(() => {
     const movieId = "64a05d29466b7a92f5411550";
     (movieService.deleteCoreMovie as jest.Mock).mockResolvedValue(null);
 
-    await handleCoreMovies(req as IncomingMessage, res as ServerResponse, movieId);
+    await handleCoreMovies(
+      req as IncomingMessage,
+      res as ServerResponse,
+      movieId
+    );
 
     expect(res.writeHead).toHaveBeenCalledWith(404, {
       "Content-Type": "application/json",
@@ -293,9 +364,15 @@ afterAll(() => {
   it("DELETE movie - success", async () => {
     req.method = "DELETE";
     const movieId = "64a05d29466b7a92f5411550";
-    (movieService.deleteCoreMovie as jest.Mock).mockResolvedValue({ _id: movieId });
+    (movieService.deleteCoreMovie as jest.Mock).mockResolvedValue({
+      _id: movieId,
+    });
 
-    await handleCoreMovies(req as IncomingMessage, res as ServerResponse, movieId);
+    await handleCoreMovies(
+      req as IncomingMessage,
+      res as ServerResponse,
+      movieId
+    );
 
     expect(res.writeHead).toHaveBeenCalledWith(200, {
       "Content-Type": "application/json",

@@ -3,7 +3,8 @@ version: '3.8'
 services:
   express-service:
     build: .
-    command: npx ts-node src/server.ts
+    # npm betiğini kullanın
+    command: npm run start:express
     ports:
       - "3001:3001"
     depends_on:
@@ -13,7 +14,8 @@ services:
 
   core-service:
     build: .
-    command: npx ts-node src/coreNode/server.ts
+    # npm betiğini kullanın
+    command: npm run start:core
     ports:
       - "4000:4000"
     depends_on:
@@ -28,11 +30,19 @@ services:
     image: mongo:4.4
     ports:
       - "27017:27017"
-  
+
   redis:
     image: redis:7
     ports:
       - "6379:6379"
+
+  data-importer:
+    build: .
+    command: npm run start:importer
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URI: "mongodb://mongo:27017/hubflix"
 
   tests:
     build: .
