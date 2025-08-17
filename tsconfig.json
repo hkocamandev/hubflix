@@ -9,6 +9,7 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "baseUrl": ".",
+    "resolveJsonModule": true,
     "typeRoots": ["./types", "./node_modules/@types"]
   },
   "include": ["src"]
