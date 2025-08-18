@@ -1,6 +1,8 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { handleCoreMovies } from "../controllers/coreMovieController";
 import { handleCoreDirectors } from "../controllers/coreDirectorController";
+import { handleAiQuery } from "../controllers/coreAiController";
+
 
 /**
  * Core Router for Hubflix Core Node API.
@@ -28,6 +30,9 @@ export const coreRouter = async (req: IncomingMessage, res: ServerResponse) => {
     // /coreApi/directors route, optionally with director ID
     if (urlParts[1] === "directors")
       return await handleCoreDirectors(req, res, urlParts[2]);
+
+      if (urlParts[1] === "ai-query") return await handleAiQuery(req, res); // <--- ai endpoint
+
   }
 
   // Respond with 404 if route is not found
