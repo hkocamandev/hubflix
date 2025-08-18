@@ -224,7 +224,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"title\": \"Inception\",\n  \"description\": \"Dream heist\",\n  \"releaseDate\": \"2010-07-16\",\n  \"genre\": \"Sci-Fi\",\n  \"rating\": 9,\n  \"imdbId\": \"tt1344544\",\n  \"director\": \"64f3a2f6d5e4d12c3a5d67a1\"\n}",
+							"raw": "{\n  \"title\": \"Inception\",\n  \"description\": \"Dream heist\",\n  \"releaseDate\": \"2023-07-16\",\n  \"genre\": \"Sci-Fi\",\n  \"rating\": 5,\n  \"imdbId\": \"tt1379544\",\n  \"director\": \"64f3a2f6d5e4d12c3a5d67a1\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -232,7 +232,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/coreApi/movies",
+							"raw": "http://localhost:4000/coreApi/movies/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -240,7 +240,14 @@
 							"port": "4000",
 							"path": [
 								"coreApi",
-								"movies"
+								"movies",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
 							]
 						}
 					},
@@ -395,6 +402,38 @@
 									"key": "id",
 									"value": "68a0fc15969acf2e7601bb67"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mcp-ai-query",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"question\": \"ratingi '9' olan filmleri getir\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/coreApi/ai-query",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"coreApi",
+								"ai-query"
 							]
 						}
 					},
