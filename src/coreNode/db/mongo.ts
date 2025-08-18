@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const dbUri = process.env.MONGO_URI || 'mongodb://localhost:27017/my_database';
+const dbUri = process.env.MONGO_URI || 'mongodb://localhost:27017/hubflix';
 
 const connectCoreDB = async () => {
   try {

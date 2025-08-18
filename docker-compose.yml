@@ -1,9 +1,12 @@
-version: '3.8'
+version: "3.9"  # 3.9 önerilir, 3.8 de çalışır
+
+networks:
+  hubflix-net:  # özel network tanımı
+    driver: bridge
 
 services:
   express-service:
     build: .
-    # npm betiğini kullanın
     command: npm run start:express
     ports:
       - "3001:3001"
@@ -11,30 +14,40 @@ services:
       - mongo
     environment:
       MONGO_URI: "mongodb://mongo:27017/hubflix"
+    networks:
+      - hubflix-net
 
   core-service:
     build: .
-    # npm betiğini kullanın
     command: npm run start:core
     ports:
       - "4000:4000"
     depends_on:
       - mongo
       - redis
+      - ollama
     environment:
       MONGO_URI: "mongodb://mongo:27017/hubflix"
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      OLLAMA_URL: "http://ollama:11434"
+      OLLAMA_MODEL: "llama3"
+    networks:
+      - hubflix-net
 
   mongo:
     image: mongo:4.4
     ports:
       - "27017:27017"
+    networks:
+      - hubflix-net
 
   redis:
     image: redis:7
     ports:
       - "6379:6379"
+    networks:
+      - hubflix-net
 
   data-importer:
     build: .
@@ -43,9 +56,28 @@ services:
       - mongo
     environment:
       MONGO_URI: "mongodb://mongo:27017/hubflix"
+    networks:
+      - hubflix-net
 
   tests:
     build: .
     depends_on:
       - mongo
     command: npm run test:coreNode
+    networks:
+      - hubflix-net
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+    command: ["serve"]
+    networks:
+      - hubflix-net
+
+volumes:
+  ollama_data:
