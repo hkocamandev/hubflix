@@ -36,7 +36,7 @@ services:
       - hubflix-net
 
   mongo:
-    image: mongo:4.4
+    image: mongo:9.0
     ports:
       - "27017:27017"
     networks:
